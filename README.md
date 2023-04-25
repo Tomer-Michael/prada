@@ -1,2 +1,1 @@
-# prada
-PRADA - Protein Anomaly Detection and Analysis
+# PRADA - Protein Anomaly Detection and Analysis
