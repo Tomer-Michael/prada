@@ -1,6 +1,6 @@
 # todo tomer go over this file
 import abc
-from typing import Iterable, List, Optional, Sequence, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 import torch
 import torch.nn.functional as F
@@ -29,13 +29,6 @@ class FeaturesTransform(abc.ABC):
          :returns The transformed features, a tensor of the shape (new_num_channels, num_samples).
         """
         pass
-
-    def apply_on_batch(self, features: Sequence[torch.Tensor]) -> List[torch.Tensor]:
-        result = list()
-        for cur_features in features:
-            transformed_features = self(cur_features)
-            result.append(transformed_features)
-        return result
 
     def __repr__(self) -> str:
         return f"{self.__class__.__qualname__}()"
@@ -178,6 +171,7 @@ class Compose(FeaturesTransform):
         return f"{self.__class__.__qualname__}({transforms_repr})"
 
 
+# todo tomer why top level?
 def _multiple_windows(features: torch.Tensor, num_windows: int, windows_size: int,
                       stride_increments: int) -> torch.Tensor:
     unsqueezed = features.unsqueeze(0).unsqueeze(3)
@@ -193,9 +187,9 @@ def _multiple_windows(features: torch.Tensor, num_windows: int, windows_size: in
     return windowed_features
 
 
-def create_default_features_transform(device: torch.device) -> FeaturesTransform:
-    return create_features_transform(max_sequence_length=-1, num_windows=-1, windows_size=-1, stride_increments=-1,
-                                     num_projections=-1, device=device, random_seed=None)
+def create_default_features_transform() -> FeaturesTransform:
+    to_cpu_transform = ToDevice(torch.device("cpu"))
+    return to_cpu_transform
 
 
 def create_features_transform(max_sequence_length: int, num_windows: int, windows_size: int, stride_increments: int,

@@ -20,20 +20,20 @@ class RunConfig:
     layers: Tuple[int, ...] = field(alias=["-representation_layers", "-repr_layers"], default=_DEFAULT_LAYERS)
     """ The layers in the model to extract the representations from. """
 
-    path_to_dataset: str = field(alias=["-dataset", "-ds"], default=TOMER)
+    path_to_dataset: str = field(alias=["-dataset", "-ds"])
     """ Path to the dataset. See 'src/protein_datasets.py' for information about the dataset's expected format. """
 
     num_splits: int = field(default=5)
-    """ todo tomer """
+    """ The number of folds in a (Stratified)KFold. """
 
     max_iter: int = field(default=150)
-    """ todo tomer """
+    """ Maximum number of iterations taken for the solvers to converge. """
 
     num_jobs: int = field(default=2)
-    """ todo tomer """
+    """ Number of CPU cores. """
 
     solver: str = field(default="saga")
-    """ todo tomer """
+    """ Algorithm to use in the optimization problem. """
 
 
 def main() -> None:

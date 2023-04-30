@@ -8,16 +8,36 @@ import torch
 
 from src.utils import torch_utils
 
-
 class Scorer(abc.ABC):
     _NUM_DIMENSIONS: int = 2
     _BATCH_DIMENSION_INDEX: int = 0
     _CHANNELS_DIMENSION_INDEX: int = 1
 
-    def __init__(self, device: torch.device) -> None:
-        self._device: torch.device = device  # todo tomer verify device index in faiss.get_num_gpus(). Why device not only in knn?
+    @abc.abstractmethod
+    def fit(self, features: List[torch.Tensor]) -> None:
+        """
+        Fits the scorer to the features.
+
+        :param features: A list of tensors of the shape (num_channels, num_samples)
+        """
+
+    def __call__(self, features: torch.Tensor) -> Tuple[float, ...]:
+        """
+        Scores the features. Gets the features in the shape of (num_channels, num_samples).
+
+        :param features: A tensor of the shape (num_channels, num_samples)
+        """
+
+
+class Scorer2(abc.ABC):
+    _NUM_DIMENSIONS: int = 2
+    _BATCH_DIMENSION_INDEX: int = 0
+    _CHANNELS_DIMENSION_INDEX: int = 1
+
+    def __init__(self) -> None:
         self._is_fitted: bool = False
 
+    @abc.abstractmethod
     def fit(self, features: List[torch.Tensor]) -> None:
         """
         Fits the scorer to the features.
@@ -69,12 +89,13 @@ class Scorer(abc.ABC):
         pass
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__qualname__}(device={self._device})"
+        return f"{self.__class__.__qualname__}()"
 
 
 class KNNScorer(Scorer):
     def __init__(self, device: torch.device, num_neighbors: int) -> None:
-        super().__init__(device)
+        super().__init__()
+        self._device: torch.device = device
         self._num_neighbors: int = num_neighbors
         self._index: Optional[faiss.Index] = None
 
@@ -120,4 +141,4 @@ def create_scorer(device: torch.device, knn_num_neighbors: int) -> Scorer:
     if use_knn:
         return KNNScorer(device, knn_num_neighbors)
     else:
-        return NormSizeScorer(device)
+        return NormSizeScorer()

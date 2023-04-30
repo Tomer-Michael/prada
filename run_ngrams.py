@@ -9,7 +9,7 @@ from src.other_methods import ngrams
 
 @dataclass(frozen=True)
 class RunConfig:
-    path_to_dataset: str = field(alias=["-dataset", "-ds"], default="./data/enzymes_dataset.csv")
+    path_to_dataset: str = field(alias=["-dataset", "-ds"])
     """ Path to the dataset. See 'src/protein_datasets.py' for information about the dataset's expected format. """
 
     train_portion: float = field(alias=["-train_p"], default=0.5)
@@ -31,8 +31,8 @@ def main() -> None:
         print(f"Command line arguments are:\n{sys.argv}")
         config = get_run_config()
         print(f"Run config is:\n{config}")
-        ngrams.run(config.path_to_dataset, config.train_portion, config.ngram_length,
-                   config.num_ngram_to_score, config.random_seed)
+        ngrams.run(config.path_to_dataset, config.train_portion, config.ngram_length, config.num_ngram_to_score,
+                   config.random_seed)
     finally:
         print("*************        Done.        *************")
 

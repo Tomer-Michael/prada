@@ -17,7 +17,7 @@ from src.protein_datasets import Protein, read_proteins_dataset
 def run(model_to_use: SupportedModels, layers: Tuple[int, ...], path_to_dataset: str, num_splits: int, max_iter: int,
         num_jobs: int, solver: str) -> None:
     extract_device = torch.device("cuda")  # todo tomer make arg
-    features_transform = create_default_features_transform(device=extract_device)
+    features_transform = create_default_features_transform()
     features_extractor = create_features_extractor(model_to_use, layers, extract_device, features_transform)
     features_processor = create_features_processor(num_quantiles=-1, use_zca=False, use_sequence_mean=True)
     proteins = read_proteins_dataset(path_to_dataset, max_sequence_len=model_to_use.max_sequence_len)
