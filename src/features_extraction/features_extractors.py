@@ -1,4 +1,4 @@
-# todo tomer go over this file, rename to extractors s
+# todo tomer go over this file
 from typing import Dict, List, Optional, Sequence, Tuple
 
 import torch
